@@ -1,0 +1,27 @@
+[
+    {
+      "CAFE_ID": "CAFE_1",
+      "TITLE": "Menú reducido",
+      "MESSAGE": "Solo hay pandebonos y fruta por mantenimiento.",
+      "CREATED_AT": "2025-04-19T08:00:00Z",
+      "EXPIRES_AT": "2025-04-19T21:00:00Z",
+      "IS_ACTIVE": true
+    },
+    {
+      "CAFE_ID": "CAFE_2",
+      "TITLE": "Combo EANISTA",
+      "MESSAGE": "Palito de queso con Avena Alpina",
+      "CREATED_AT": "2025-04-19T09:00:00Z",
+      "EXPIRES_AT": "2025-04-19T15:00:00Z",
+      "IS_ACTIVE": true
+    },
+    {
+      "CAFE_ID": "CAFE_3",
+      "TITLE": "Sin almuerzos hoy",
+      "MESSAGE": "No se prestará servicio de almuerzo. Solo vitrina.",
+      "CREATED_AT": "2025-04-19T06:30:00Z",
+      "EXPIRES_AT": "2025-04-19T11:00:00Z",
+      "IS_ACTIVE": true
+    }
+  ]
+  
