@@ -1,0 +1,16 @@
+{
+    "APP_NAME": "UniEats Platform",
+    "VERSION": "1.0.0",
+    "STATUS": "maintenance",
+    "DEFAULT_LANGUAGE": "es",
+    "MAINTENANCE_MODE": true,
+    "UNIVERSITY_NAME": "EAN University",
+    "TIMEZONE": "America/Bogota",
+    "OPERATING_HOURS": {
+      "WEEKDAYS": "07:00-21:00",
+      "SATURDAY": "08:00-15:00",
+      "SUNDAY": "closed"
+    },
+    "ALLOW_MULTI_CAFETERIA_ORDER": true
+  }
+  
