@@ -126,10 +126,7 @@ CREATE TABLE ORDER_DETAILS(
 
 CREATE TABLE PAYMENT_METHODS(
     PAYMENT_METHOD_ID INT PRIMARY KEY AUTO_INCREMENT,
-    USER_ID INT NOT NULL,
     METHOD_NAME VARCHAR(50) NOT NULL,
-    FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)
-    ON DELETE CASCADE
 );
 
 CREATE TABLE PAYMENTS(
@@ -154,6 +151,30 @@ INSERT INTO ROLES (ROLE_NAME) VALUES
 ('Profesor'),
 ('Administrativo'),
 ('Colaborador');
+
+-- Inersercion de registros Cafeterias
+
+INSERT INTO CAFES (CAFE_ID, CAFE_NAME, CAFE_LOCATION, COMPANY_NAME) VALUES 
+(1, 'Cafeteria Principal', 'EAN Legacy, Piso 1', 'Cafeteria 1'), 
+(2, 'Cafeteria 6 Piso', 'EAN Legacy, Piso 6', 'Cafeteria2'), 
+(3, 'Cafeteria 4 Piso', 'EAN Legacy, Piso 4', 'Cafeteria 3'), 
+(4, 'Cafeteria 4-2 Piso', 'EAN Nogal, Piso 4', 'Cafeteria 4'); 
+
+-- Insercion de registros roles en tabla WORKSTATION
+
+INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
+('Cajero'),
+('Cocinero'),
+('Limpieza Cocina'),
+('Entregador'),
+('Auxiliar de Caja'),
+('Repostería'),
+('Encargado Bebidas'),
+('Plancha'),
+('Freidora'),
+('Asistente Cocina'),
+('Supervisor General'),
+('Atención al Cliente');
 
 -- Insercion de registros en tabla USERS
 
@@ -229,3 +250,68 @@ VALUES
 (68, 'Santiago', 'David', 'Castaño', 'Padilla', '10000068', 'santiago.castaño68@universidadean.edu.co', 'Calle 60 #30-15', 'santiagocastaño68#', 1),
 (69, 'Isabella', 'Alberto', 'Castañeda', 'Holguín', '10000069', 'isabella.castañeda69@universidadean.edu.co', 'Calle 38 #11-2', 'isabellacastañeda69#', 2),
 (70, 'Esteban', 'Esteban', 'Zapata', 'Valencia', '10000070', 'esteban.zapata70@universidadean.edu.co', 'Calle 26 #12-19', 'estebanzapata70#', 3);
+
+-- Insercion registro Empleados Cafeterias Universidad EAN
+
+INSERT INTO EMPLOYEES_CAFE (EMPLOYEES_ID, FIRST_NAME, SECOND_NAME, LAST_NAME, SECOND_LAST_NAME, CC_NUMBER, EMAIL, ADDRESS, PASSWORD, CAFE_ID, WORKSTATION_ID)
+VALUES
+(101, 'Camila', 'Luis', 'García', 'Solano', '0101', 'camila.garcía0101@unieats.com', 'Calle 19 #8-15', 'camilagarcía0101emp#', 1, 10),
+(102, 'Diana', 'Margarita', 'Mejía', 'Padilla', '0102', 'diana.mejía0102@unieats.com', 'Calle 46 #24-18', 'dianamejía0102emp#', 1, 9),
+(103, 'Tomás', 'Sofía', 'Moreno', 'Muñoz', '0103', 'tomás.moreno0103@unieats.com', 'Calle 54 #15-3', 'tomásmoreno0103emp#', 1, 1),
+(104, 'Adriana', 'José', 'Castañeda', 'Ramírez', '0104', 'adriana.castañeda0104@unieats.com', 'Calle 45 #17-11', 'adrianacastañeda0104emp#', 1, 7),
+(105, 'Luciana', 'Armando', 'Castaño', 'Arévalo', '0105', 'luciana.castaño0105@unieats.com', 'Calle 38 #21-11', 'lucianacastaño0105emp#', 1, 6),
+(106, 'Catalina', 'Paola', 'Cruz', 'Velasco', '0106', 'catalina.cruz0106@unieats.com', 'Calle 64 #24-18', 'catalinacruz0106emp#', 1, 8),
+(107, 'Mateo', 'Mauricio', 'Vallejo', 'Ruiz', '0107', 'mateo.vallejo0107@unieats.com', 'Calle 30 #26-19', 'mateovallejo0107emp#', 1, 5),
+(108, 'Catalina', 'Andrea', 'Blanco', 'Cardona', '0108', 'catalina.blanco0108@unieats.com', 'Calle 33 #18-9', 'catalinablanco0108emp#', 1, 8),
+(109, 'Jorge', 'Eduardo', 'Pérez', 'Rosales', '0109', 'jorge.pérez0109@unieats.com', 'Calle 24 #4-18', 'jorgepérez0109emp#', 1, 3),
+(110, 'Melissa', 'Leonardo', 'Gutiérrez', 'Padilla', '0110', 'melissa.gutiérrez0110@unieats.com', 'Calle 55 #11-23', 'melissagutiérrez0110emp#', 1, 12),
+(111, 'Esteban', 'Isabel', 'Álvarez', 'Rojas', '0111', 'esteban.álvarez0111@unieats.com', 'Calle 25 #18-17', 'estebanálvarez0111emp#', 1, 2),
+(112, 'Camila', 'Esteban', 'Morales', 'Rivas', '0112', 'camila.morales0112@unieats.com', 'Calle 60 #6-11', 'camilamorales0112emp#', 1, 4),
+(201, 'Santiago', 'Iván', 'Guerrero', 'Mendoza', '0201', 'santiago.guerrero0201@unieats.com', 'Calle 9 #17-27', 'santiagoguerrero0201emp#', 2, 3),
+(202, 'María', 'Carolina', 'Ruiz', 'Palacios', '0202', 'maría.ruiz0202@unieats.com', 'Calle 61 #15-20', 'maríaruiz0202emp#', 2, 5),
+(203, 'Francisco', 'Iván', 'Carrillo', 'Paredes', '0203', 'francisco.carrillo0203@unieats.com', 'Calle 56 #15-3', 'franciscocarrillo0203emp#', 2, 10),
+(204, 'Valentina', 'Hernando', 'Mejía', 'Holguín', '0204', 'valentina.mejía0204@unieats.com', 'Calle 62 #24-8', 'valentinamejía0204emp#', 2, 9),
+(205, 'Laura', 'Alejandro', 'Montenegro', 'Rodríguez', '0205', 'laura.montenegro0205@unieats.com', 'Calle 41 #26-22', 'lauramontenegro0205emp#', 2, 2),
+(206, 'Valentina', 'Fernanda', 'Vallejo', 'Osorio', '0206', 'valentina.vallejo0206@unieats.com', 'Calle 5 #9-23', 'valentinavallejo0206emp#', 2, 5),
+(207, 'Ricardo', 'Leonardo', 'García', 'Peña', '0207', 'ricardo.garcía0207@unieats.com', 'Calle 65 #27-8', 'ricardogarcía0207emp#', 2, 7),
+(208, 'Luciana', 'Marcela', 'Vargas', 'Parra', '0208', 'luciana.vargas0208@unieats.com', 'Calle 22 #14-18', 'lucianavargas0208emp#', 2, 8),
+(209, 'Felipe', 'Andrea', 'Acosta', 'Paredes', '0209', 'felipe.acosta0209@unieats.com', 'Calle 18 #29-11', 'felipeacosta0209emp#', 2, 7),
+(210, 'Camilo', 'Angélica', 'Vargas', 'Quintero', '0210', 'camilo.vargas0210@unieats.com', 'Calle 24 #8-8', 'camilovargas0210emp#', 2, 7),
+(211, 'Ricardo', 'Lucía', 'Quintero', 'Martínez', '0211', 'ricardo.quintero0211@unieats.com', 'Calle 53 #17-3', 'ricardoquintero0211emp#', 2, 2),
+(212, 'Juliana', 'Margarita', 'Medina', 'Rojas', '0212', 'juliana.medina0212@unieats.com', 'Calle 13 #28-11', 'julianamedina0212emp#', 2, 10),
+(301, 'Ximena', 'Eduardo', 'Moreno', 'Palacios', '0301', 'ximena.moreno0301@unieats.com', 'Calle 39 #6-20', 'ximenamoreno0301emp#', 3, 5),
+(302, 'Tomás', 'Hernando', 'Silva', 'Martínez', '0302', 'tomás.silva0302@unieats.com', 'Calle 31 #7-15', 'tomássilva0302emp#', 3, 10),
+(303, 'Luciana', 'Felipe', 'Morales', 'Osorio', '0303', 'luciana.morales0303@unieats.com', 'Calle 59 #3-29', 'lucianamorales0303emp#', 3, 11),
+(304, 'Brayan', 'Felipe', 'Gómez', 'Parra', '0304', 'brayan.gómez0304@unieats.com', 'Calle 30 #5-13', 'brayangómez0304emp#', 3, 6),
+(305, 'Carolina', 'Daniela', 'Salazar', 'Córdoba', '0305', 'carolina.salazar0305@unieats.com', 'Calle 34 #24-4', 'carolinasalazar0305emp#', 3, 8),
+(306, 'David', 'Hernando', 'Ramírez', 'Guzmán', '0306', 'david.ramírez0306@unieats.com', 'Calle 11 #9-10', 'davidramírez0306emp#', 3, 9),
+(307, 'Gabriela', 'Milena', 'Álvarez', 'Padilla', '0307', 'gabriela.álvarez0307@unieats.com', 'Calle 60 #22-5', 'gabrielaálvarez0307emp#', 3, 4),
+(308, 'Paula', 'Tatiana', 'Patiño', 'Ruiz', '0308', 'paula.patiño0308@unieats.com', 'Calle 57 #3-14', 'paulapatiño0308emp#', 3, 11),
+(309, 'Isabella', 'Milena', 'Vega', 'Velasco', '0309', 'isabella.vega0309@unieats.com', 'Calle 56 #20-29', 'isabellavega0309emp#', 3, 8),
+(310, 'Ximena', 'José', 'Patiño', 'Paredes', '0310', 'ximena.patiño0310@unieats.com', 'Calle 65 #30-26', 'ximenapatiño0310emp#', 3, 3),
+(311, 'Kevin', 'José', 'Quintero', 'Quintero', '0311', 'kevin.quintero0311@unieats.com', 'Calle 58 #16-8', 'kevinquintero0311emp#', 3, 10),
+(312, 'Natalia', 'Leonardo', 'Castaño', 'Castaño', '0312', 'natalia.castaño0312@unieats.com', 'Calle 31 #30-1', 'nataliacastaño0312emp#', 3, 8),
+(401, 'Carolina', 'David', 'Rojas', 'Moreno', '0401', 'carolina.rojas0401@unieats.com', 'Calle 12 #10-11', 'carolinarojas0401emp#', 4, 11),
+(402, 'Daniela', 'José', 'Álvarez', 'Paredes', '0402', 'daniela.álvarez0402@unieats.com', 'Calle 39 #18-21', 'danielaálvarez0402emp#', 4, 2),
+(403, 'Diana', 'Andrea', 'Salazar', 'Ramírez', '0403', 'diana.salazar0403@unieats.com', 'Calle 48 #6-28', 'dianasalazar0403emp#', 4, 1),
+(404, 'Carolina', 'Armando', 'Gutiérrez', 'Ortega', '0404', 'carolina.gutiérrez0404@unieats.com', 'Calle 39 #16-9', 'carolinagutiérrez0404emp#', 4, 6),
+(405, 'Francisco', 'Armando', 'Salazar', 'Osorio', '0405', 'francisco.salazar0405@unieats.com', 'Calle 25 #2-29', 'franciscosalazar0405emp#', 4, 3),
+(406, 'Carolina', 'Milena', 'Ramírez', 'González', '0406', 'carolina.ramírez0406@unieats.com', 'Calle 69 #22-28', 'carolinaramírez0406emp#', 4, 3),
+(407, 'Kevin', 'Mauricio', 'Delgado', 'Padilla', '0407', 'kevin.delgado0407@unieats.com', 'Calle 18 #7-7', 'kevindelgado0407emp#', 4, 12),
+(408, 'Mariana', 'Carolina', 'López', 'Guzmán', '0408', 'mariana.lópez0408@unieats.com', 'Calle 8 #22-27', 'marianalópez0408emp#', 4, 8),
+(409, 'Alejandro', 'Armando', 'Carrillo', 'Guzmán', '0409', 'alejandro.carrillo0409@unieats.com', 'Calle 11 #16-29', 'alejandrocarrillo0409emp#', 4, 5),
+(410, 'Alejandro', 'Luis', 'Torres', 'Rojas', '0410', 'alejandro.torres0410@unieats.com', 'Calle 59 #22-15', 'alejandrotorres0410emp#', 4, 8),
+(411, 'Luciana', 'Alexander', 'Castaño', 'González', '0411', 'luciana.castaño0411@unieats.com', 'Calle 12 #21-29', 'lucianacastaño0411emp#', 4, 12),
+(412, 'Tomás', 'Eduardo', 'Aguilar', 'Osorio', '0412', 'tomás.aguilar0412@unieats.com', 'Calle 63 #20-20', 'tomásaguilar0412emp#', 4, 3);
+
+-- Insercion registro metodos de pago
+
+INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, METHOD_NAME) VALUES
+(1, 'Efectivo'),
+(2, 'Tarjeta de Crédito'),
+(3, 'Tarjeta Débito'),
+(4, 'PSE'),
+(5, 'Nequi'),
+(6, 'Daviplata'),
+(7, 'Bancolombia App');
+
