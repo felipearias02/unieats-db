@@ -29,7 +29,8 @@ CREATE TABLE USERS(
     CREATED_AT TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UPDATED_AT TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID),
-    CHECK (CHAR_LENGTH(PASSWORD) >= 8)
+    CHECK (CHAR_LENGTH(PASSWORD) >= 8),
+    INDEX IDX_EMAIL (INSTITUTIONAL_EMAIL)
 );
 
 CREATE TABLE PHONES(
@@ -70,7 +71,8 @@ CREATE TABLE EMPLOYEES_CAFE(
     IS_ACTIVE BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (CAFE_ID) REFERENCES CAFES(CAFE_ID),
     FOREIGN KEY (WORKSTATION_ID) REFERENCES WORKSTATION(WORKSTATION_ID)
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+    INDEX IDX_CAFE_ID_EMP (CAFE_ID)
 );
 
 CREATE TABLE CATEGORIES(
@@ -90,7 +92,8 @@ CREATE TABLE PRODUCTS(
     FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORIES(CATEGORY_ID),
     FOREIGN KEY (CAFE_ID) REFERENCES CAFES(CAFE_ID),
     CHECK (PRICE > 0),
-    CHECK (STOCK >= 0)
+    CHECK (STOCK >= 0),
+    INDEX IDX_CAFE_ID (CAFE_ID)
 );
 
 CREATE TABLE ORDERS(
@@ -108,7 +111,9 @@ CREATE TABLE ORDERS(
     FOREIGN KEY (CAFE_ID) REFERENCES CAFES(CAFE_ID),
     FOREIGN KEY (TAKEN_BY_EMPLOYEE_ID) REFERENCES EMPLOYEES_CAFE(EMPLOYEES_ID),
     FOREIGN KEY (DELIVERED_BY_EMPLOYEE_ID) REFERENCES EMPLOYEES_CAFE(EMPLOYEES_ID),
-    CHECK (TOTAL_AMOUNT > 0)
+    CHECK (TOTAL_AMOUNT > 0),
+    INDEX IDX_USER_ID (USER_ID),
+    INDEX IDX_CAFE_ID (CAFE_ID)
 );
 
 CREATE TABLE ORDER_DETAILS(
@@ -121,12 +126,14 @@ CREATE TABLE ORDER_DETAILS(
     FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS(PRODUCT_ID),
     UNIQUE (ORDER_ID, PRODUCT_ID),
     CHECK (QUANTITY > 0),
-    CHECK (UNIT_PRICE > 0)
+    CHECK (UNIT_PRICE > 0),
+    INDEX IDX_ORDER_ID (ORDER_ID),
+    INDEX IDX_PRODUCT_ID (PRODUCT_ID)
 ); 
 
 CREATE TABLE PAYMENT_METHODS(
     PAYMENT_METHOD_ID INT PRIMARY KEY AUTO_INCREMENT,
-    METHOD_NAME VARCHAR(50) NOT NULL,
+    METHOD_NAME VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE PAYMENTS(
@@ -144,7 +151,7 @@ CREATE TABLE PAYMENTS(
     CHECK (AMOUNT_PAID > 0)
 );
 
--- Insercion de registros en tabla ROLES
+-- INSERCION TABLA ROLES
 
 INSERT INTO ROLES (ROLE_NAME) VALUES
 ('Estudiante'),
@@ -152,7 +159,7 @@ INSERT INTO ROLES (ROLE_NAME) VALUES
 ('Administrativo'),
 ('Colaborador');
 
--- Inersercion de registros Cafeterias
+-- INSERCION TABLA CAFES
 
 INSERT INTO CAFES (CAFE_ID, CAFE_NAME, CAFE_LOCATION, COMPANY_NAME) VALUES 
 (1, 'Cafeteria Principal', 'EAN Legacy, Piso 1', 'Cafeteria 1'), 
@@ -160,7 +167,7 @@ INSERT INTO CAFES (CAFE_ID, CAFE_NAME, CAFE_LOCATION, COMPANY_NAME) VALUES
 (3, 'Cafeteria 4 Piso', 'EAN Legacy, Piso 4', 'Cafeteria 3'), 
 (4, 'Cafeteria 4-2 Piso', 'EAN Nogal, Piso 4', 'Cafeteria 4'); 
 
--- Insercion de registros roles en tabla WORKSTATION
+-- INSERCION TABLA WORKSTATION
 
 INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 ('Cajero'),
@@ -176,7 +183,7 @@ INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 ('Supervisor General'),
 ('Atención al Cliente');
 
--- Insercion de registros en tabla USERS
+-- INSERCION TABLA USERS
 
 INSERT INTO USERS (USER_ID, FIRST_NAME, SECOND_NAME, LAST_NAME, SECOND_LAST_NAME, CC_NUMBER, INSTITUTIONAL_EMAIL, ADDRESS, PASSWORD, ROLE_ID)
 VALUES
@@ -251,7 +258,7 @@ VALUES
 (69, 'Isabella', 'Alberto', 'Castañeda', 'Holguín', '10000069', 'isabella.castañeda69@universidadean.edu.co', 'Calle 38 #11-2', 'isabellacastañeda69#', 2),
 (70, 'Esteban', 'Esteban', 'Zapata', 'Valencia', '10000070', 'esteban.zapata70@universidadean.edu.co', 'Calle 26 #12-19', 'estebanzapata70#', 3);
 
--- Insercion registro Empleados Cafeterias Universidad EAN
+-- INSERCION TABLA EMPLOYEES_CAFE
 
 INSERT INTO EMPLOYEES_CAFE (EMPLOYEES_ID, FIRST_NAME, SECOND_NAME, LAST_NAME, SECOND_LAST_NAME, CC_NUMBER, EMAIL, ADDRESS, PASSWORD, CAFE_ID, WORKSTATION_ID)
 VALUES
@@ -304,7 +311,7 @@ VALUES
 (411, 'Luciana', 'Alexander', 'Castaño', 'González', '0411', 'luciana.castaño0411@unieats.com', 'Calle 12 #21-29', 'lucianacastaño0411emp#', 4, 12),
 (412, 'Tomás', 'Eduardo', 'Aguilar', 'Osorio', '0412', 'tomás.aguilar0412@unieats.com', 'Calle 63 #20-20', 'tomásaguilar0412emp#', 4, 3);
 
--- Insercion registro metodos de pago
+-- INSERCION TABLA PAYMENT_METHODS
 
 INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, METHOD_NAME) VALUES
 (1, 'Efectivo'),
@@ -315,3 +322,192 @@ INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, METHOD_NAME) VALUES
 (6, 'Daviplata'),
 (7, 'Bancolombia App');
 
+-- INSERCION TABLA CATEGORIES
+
+INSERT INTO CATEGORIES (CATEGORY_ID, CATEGORY_NAME) VALUES
+(1, 'Bebidas calientes'),
+(2, 'Bebidas frías'),
+(3, 'Desayunos'),
+(4, 'Almuerzos'),
+(5, 'Comidas rápidas'),
+(6, 'Postres'),
+(7, 'Ensaladas'),
+(8, 'Combos'),
+(9, 'Productos saludables'),
+(10, 'Otros');
+
+-- INSERCION TABLA PRODUCTS
+
+-- CAFETERIA 1
+INSERT INTO PRODUCTS (PRODUCT_ID, CATEGORY_ID, CAFE_ID, PRODUCT_NAME, P_DESCRIPTION, PRICE, STOCK) VALUES
+(1001, 1, 1, 'Café americano', 'Café negro servido caliente sin azúcar.', 3000, 120),
+(1002, 1, 1, 'Chocolate caliente', 'Bebida espesa con cacao, leche y azúcar.', 3500, 80),
+(1003, 2, 1, 'Avena Alpina con canela', 'Avena fría saborizada con canela.', 2500, 100),
+(1004, 2, 1, 'Jugo Hit mango', 'Jugo Hit en caja sabor mango.', 2800, 60),
+(1005, 2, 1, 'H2O', 'Bebida hidratante sin azúcar.', 2200, 100),
+(1006, 4, 1, 'Arroz con pollo (buffet)', 'Plato completo servido por el mesero.', 10000, 50),
+(1007, 4, 1, 'Spaghetti con pollo', 'Pasta con pollo en salsa.', 9500, 40),
+(1008, 5, 1, 'Palito de queso', 'Masa frita rellena de queso costeño.', 2200, 200),
+(1009, 5, 1, 'Empanada de carne', 'Empanada frita rellena con carne molida.', 2000, 180),
+(1010, 5, 1, 'Pastel de pollo', 'Hojaldre relleno de pollo.', 2500, 150),
+(1011, 6, 1, 'Brownie de chocolate', 'Postre húmedo de chocolate.', 3200, 70),
+(1012, 9, 1, 'Yogur con granola', 'Yogur natural con granola crujiente.', 3000, 90),
+(1013, 10, 1, 'Servilleta adicional', 'Unidad adicional de servilleta.', 500, 300);
+
+-- CAFETERIA 2
+INSERT INTO PRODUCTS (PRODUCT_ID, CATEGORY_ID, CAFE_ID, PRODUCT_NAME, P_DESCRIPTION, PRICE, STOCK) VALUES
+(2001, 1, 2, 'Café espresso', 'Café concentrado en porción individual.', 2800, 80),
+(2002, 1, 2, 'Té verde', 'Té caliente antioxidante.', 3000, 60),
+(2003, 2, 2, 'H20', 'Bebida hidratante sin azúcar.', 2200, 90),
+(2004, 4, 2, 'Lasaña de de carne', 'Lasaña con pollo y queso gratinado.', 10500, 35),
+(2005, 4, 2, 'Spaghetti vegetariano', 'Pasta con verduras salteadas.', 9000, 40),
+(2006, 5, 2, 'Empanada de pollo', 'Empanada de pollo.', 2000, 150),
+(2007, 5, 2, 'Pastel de carne', ' Pastel relleno de carne.', 2500, 130),
+(2008, 6, 2, 'Brownie de chocolate', 'Postre húmedo de chocolate.', 3200, 70),
+(2009, 2, 2, 'Hatsu té frío', 'Té frío de la marca Hatsu.', 4000, 50),
+(2010, 9, 2, 'Yogur natural', 'Yogur sin azúcar ni toppings.', 2700, 60);
+
+-- CAFETERIA 3
+INSERT INTO PRODUCTS (PRODUCT_ID, CATEGORY_ID, CAFE_ID, PRODUCT_NAME, P_DESCRIPTION, PRICE, STOCK) VALUES
+(3001, 1, 3, 'Café con leche', 'Café negro con leche caliente.', 3200, 90),
+(3002, 2, 3, 'Avena Alpina sin canela', 'Avena fría sin canela añadida.', 2400, 100),
+(3003, 2, 3, 'Té frío de frutas', 'Infusión fría con sabores frutales.', 3000, 75),
+(3004, 5, 3, 'Palito de queso', 'Masa frita rellena de queso costeño.', 2200, 200),
+(3005, 5, 3, 'Empanada de pollo', 'Empanada frita rellena con pollo.', 2000, 150),
+(3006, 5, 3, 'Sándwich de atún con té', 'Sándwich frío acompañado con té.', 5000, 40),
+(3007, 6, 3, 'Dona glaseada', 'Dona dulce cubierta con azúcar.', 2800, 60),
+(3008, 6, 3, 'Chocolatina Jet', 'Chocolatina tradicional de leche.', 1500, 100),
+(3009, 6, 3, 'Galleta de avena', 'Galleta horneada con avena.', 1800, 90),
+(3010, 9, 3, 'Yogur con granola', 'Yogur natural con granola crujiente.', 3000, 80),
+(3011, 10, 3, 'Dulces variados', 'Combo de caramelos surtidos.', 1000, 100),
+(3012, 10, 3, 'Servilleta adicional', 'Unidad adicional de servilleta.', 500, 250);
+
+-- CAFETERIA 4
+INSERT INTO PRODUCTS (PRODUCT_ID, CATEGORY_ID, CAFE_ID, PRODUCT_NAME, P_DESCRIPTION, PRICE, STOCK) VALUES
+(4001, 1, 4, 'Té negro', 'Té caliente fuerte con cafeína.', 2800, 70),
+(4002, 2, 4, 'Avena Alpina con canela', 'Avena fría saborizada con canela.', 2500, 90),
+(4003, 2, 4, 'Limonada natural', 'Bebida fría de limón con panela.', 2800, 60),
+(4004, 5, 4, 'Palito de queso', 'Masa frita rellena de queso costeño.', 2200, 200),
+(4005, 5, 4, 'Pastel de pollo', 'Hojaldre relleno de pollo.', 2500, 130),
+(4006, 6, 4, 'Brownie de chocolate', 'Postre húmedo de chocolate.', 3200, 65),
+(4007, 6, 4, 'Galleta de avena', 'Galleta horneada con avena.', 1800, 70),
+(4008, 7, 4, 'Kit de frutas', 'Porción de frutas picadas.', 4000, 50),
+(4009, 9, 4, 'Yogur con granola', 'Yogur natural con granola crujiente.', 3000, 70),
+(4010, 10, 4, 'Servilleta adicional', 'Unidad adicional de servilleta.', 500, 200);
+
+-- INSERCION TABLA ORDERS
+INSERT INTO ORDERS (ORDER_ID, USER_ID, CAFE_ID, TAKEN_BY_EMPLOYEE_ID, DELIVERED_BY_EMPLOYEE_ID, ORDER_DATE, ORDER_STATUS, TOTAL_AMOUNT, CREATED_AT, UPDATED_AT) VALUES
+(1, 66, 3, 110, 410, '2025-04-27 22:18:17', 'CANCELLED', 10500.0, '2025-04-27 22:18:17', '2025-04-27 22:18:17'),
+(2, 7, 2, 307, 412, '2025-04-29 22:18:17', 'COMPLETED', 15600.0, '2025-04-29 22:18:17', '2025-04-29 22:18:17'),
+(3, 46, 1, 206, 310, '2025-04-29 22:18:17', 'CANCELLED', 5600.0, '2025-04-29 22:18:17', '2025-04-29 22:18:17'),
+(4, 29, 3, 409, 207, '2025-04-24 22:18:17', 'IN_PROGRESS', 3500.0, '2025-04-24 22:18:17', '2025-04-24 22:18:17'),
+(5, 57, 3, 212, 302, '2025-04-25 22:18:17', 'CANCELLED', 12000.0, '2025-04-25 22:18:17', '2025-04-25 22:18:17'),
+(6, 33, 1, 403, 110, '2025-04-20 22:18:17', 'COMPLETED', 6400.0, '2025-04-20 22:18:17', '2025-04-20 22:18:17'),
+(7, 10, 1, 104, 101, '2025-04-28 22:18:17', 'PENDING', 12800.0, '2025-04-28 22:18:17', '2025-04-28 22:18:17'),
+(8, 57, 3, 406, 206, '2025-04-19 22:18:17', 'COMPLETED', 5000.0, '2025-04-19 22:18:17', '2025-04-19 22:18:17'),
+(9, 22, 4, 308, 207, '2025-04-15 22:18:17', 'COMPLETED', 6800.0, '2025-04-15 22:18:17', '2025-04-15 22:18:17'),
+(10, 57, 3, 411, 412, '2025-04-28 22:18:17', 'COMPLETED', 53500.0, '2025-04-28 22:18:17', '2025-04-28 22:18:17'),
+(11, 46, 2, 105, 308, '2025-04-28 22:18:17', 'COMPLETED', 2400.0, '2025-04-28 22:18:17', '2025-04-28 22:18:17'),
+(12, 57, 1, 201, 203, '2025-04-29 22:18:17', 'PENDING', 21700.0, '2025-04-29 22:18:17', '2025-04-29 22:18:17'),
+(13, 4, 3, 412, 410, '2025-04-16 22:18:17', 'CANCELLED', 7500.0, '2025-04-16 22:18:17', '2025-04-16 22:18:17'),
+(14, 69, 1, 104, 104, '2025-04-15 22:18:17', 'COMPLETED', 12000.0, '2025-04-15 22:18:17', '2025-04-15 22:18:17'),
+(15, 66, 2, 105, 312, '2025-04-20 22:18:17', 'PENDING', 24200.0, '2025-04-20 22:18:17', '2025-04-20 22:18:17'),
+(16, 48, 3, 210, 104, '2025-04-17 22:18:17', 'CANCELLED', 14900.0, '2025-04-17 22:18:17', '2025-04-17 22:18:17'),
+(17, 19, 4, 311, 409, '2025-04-25 22:18:17', 'PENDING', 4900.0, '2025-04-25 22:18:17', '2025-04-25 22:18:17'),
+(18, 4, 4, 312, 412, '2025-04-28 22:18:17', 'IN_PROGRESS', 22400.0, '2025-04-28 22:18:17', '2025-04-28 22:18:17'),
+(19, 50, 4, 307, 107, '2025-04-25 22:18:17', 'PENDING', 11400.0, '2025-04-25 22:18:17', '2025-04-25 22:18:17'),
+(20, 18, 4, 310, 409, '2025-04-17 22:18:17', 'IN_PROGRESS', 8400.0, '2025-04-17 22:18:17', '2025-04-17 22:18:17'),
+(21, 31, 1, 306, 212, '2025-04-26 22:18:17', 'PENDING', 14600.0, '2025-04-26 22:18:17', '2025-04-26 22:18:17'),
+(22, 30, 1, 306, 306, '2025-04-29 22:18:17', 'PENDING', 16500.0, '2025-04-29 22:18:17', '2025-04-29 22:18:17'),
+(23, 45, 2, 106, 202, '2025-04-26 22:18:17', 'CANCELLED', 10600.0, '2025-04-26 22:18:17', '2025-04-26 22:18:17'),
+(24, 49, 1, 109, 203, '2025-04-25 22:18:17', 'CANCELLED', 44400.0, '2025-04-25 22:18:17', '2025-04-25 22:18:17'),
+(25, 22, 1, 301, 403, '2025-04-20 22:18:17', 'IN_PROGRESS', 4800.0, '2025-04-20 22:18:17', '2025-04-20 22:18:17');
+
+
+-- INSERCION TABLA ORDER_DETAILS
+INSERT INTO ORDER_DETAILS (DETAIL_ID, ORDER_ID, PRODUCT_ID, QUANTITY, UNIT_PRICE) VALUES
+(1, 1, 1002, 3, 3500),
+(2, 2, 2003, 3, 2200),
+(3, 2, 2002, 1, 3000),
+(4, 2, 1009, 3, 2000),
+(5, 3, 4003, 2, 2800),
+(6, 4, 1002, 1, 3500),
+(7, 5, 2002, 3, 3000),
+(8, 5, 3010, 1, 3000),
+(9, 6, 4007, 3, 1800),
+(10, 6, 4010, 2, 500),
+(11, 7, 3006, 2, 5000),
+(12, 7, 4003, 1, 2800),
+(13, 8, 4010, 2, 500),
+(14, 8, 3005, 2, 2000),
+(15, 9, 2001, 1, 2800),
+(16, 9, 2009, 1, 4000),
+(17, 10, 1007, 1, 9500),
+(18, 10, 2010, 3, 2700),
+(19, 10, 4004, 2, 2200),
+(20, 10, 2004, 3, 10500),
+(21, 11, 3002, 1, 2400),
+(22, 12, 4006, 3, 3200),
+(23, 12, 4005, 1, 2500),
+(24, 12, 3001, 3, 3200),
+(25, 13, 1003, 3, 2500),
+(26, 14, 2006, 1, 2000),
+(27, 14, 1006, 1, 10000),
+(28, 15, 2005, 1, 9000),
+(29, 15, 3007, 2, 2800),
+(30, 15, 4006, 2, 3200),
+(31, 15, 3001, 1, 3200),
+(32, 16, 4010, 1, 500),
+(33, 16, 4009, 3, 3000),
+(34, 16, 4007, 3, 1800),
+(35, 17, 3012, 1, 500),
+(36, 17, 2003, 2, 2200),
+(37, 18, 2005, 1, 9000),
+(38, 18, 4006, 3, 3200),
+(39, 18, 4010, 2, 500),
+(40, 18, 4001, 1, 2800),
+(41, 19, 1003, 2, 2500),
+(42, 19, 2008, 2, 3200),
+(43, 20, 2001, 3, 2800),
+(44, 21, 2001, 2, 2800),
+(45, 21, 4007, 3, 1800),
+(46, 21, 3009, 2, 1800),
+(47, 22, 2004, 1, 10500),
+(48, 22, 1009, 3, 2000),
+(49, 23, 4003, 2, 2800),
+(50, 23, 3005, 1, 2000),
+(51, 23, 3003, 1, 3000),
+(52, 24, 1006, 3, 10000),
+(53, 24, 1004, 1, 2800),
+(54, 24, 1008, 3, 2200),
+(55, 24, 1010, 2, 2500),
+(56, 25, 3002, 2, 2400);
+
+
+-- INSERCION TABLA PAYMENTS
+INSERT INTO PAYMENTS (PAYMENT_ID, ORDER_ID, PAYMENT_METHOD_ID, AMOUNT_PAID, PAYMENT_DATE, PAYMENT_STATUS, REFERENCE_CODE, IS_REFUNDED) VALUES
+(1, 1, 5, 10500.0, '2025-04-27 22:18:17', 'PAID', 'REF100001', TRUE),
+(2, 2, 4, 15600.0, '2025-04-29 22:18:17', 'PAID', 'REF100002', FALSE),
+(3, 3, 5, 5600.0, '2025-04-29 22:18:17', 'PAID', 'REF100003', TRUE),
+(4, 4, 3, 3500.0, '2025-04-24 22:18:17', 'PAID', 'REF100004', FALSE),
+(5, 5, 5, 12000.0, '2025-04-25 22:18:17', 'PAID', 'REF100005', TRUE),
+(6, 6, 1, 6400.0, '2025-04-20 22:18:17', 'PAID', 'REF100006', FALSE),
+(7, 7, 1, 12800.0, '2025-04-28 22:18:17', 'PAID', 'REF100007', FALSE),
+(8, 8, 5, 5000.0, '2025-04-19 22:18:17', 'PAID', 'REF100008', FALSE),
+(9, 9, 3, 6800.0, '2025-04-15 22:18:17', 'PAID', 'REF100009', FALSE),
+(10, 10, 3, 53500.0, '2025-04-28 22:18:17', 'PAID', 'REF100010', FALSE),
+(11, 11, 1, 2400.0, '2025-04-28 22:18:17', 'PAID', 'REF100011', FALSE),
+(12, 12, 3, 21700.0, '2025-04-29 22:18:17', 'PAID', 'REF100012', FALSE),
+(13, 13, 4, 7500.0, '2025-04-16 22:18:17', 'PAID', 'REF100013', TRUE),
+(14, 14, 2, 12000.0, '2025-04-15 22:18:17', 'PAID', 'REF100014', FALSE),
+(15, 15, 4, 24200.0, '2025-04-20 22:18:17', 'PAID', 'REF100015', FALSE),
+(16, 16, 1, 14900.0, '2025-04-17 22:18:17', 'PAID', 'REF100016', TRUE),
+(17, 17, 3, 4900.0, '2025-04-25 22:18:17', 'PAID', 'REF100017', FALSE),
+(18, 18, 5, 22400.0, '2025-04-28 22:18:17', 'PAID', 'REF100018', FALSE),
+(19, 19, 2, 11400.0, '2025-04-25 22:18:17', 'PAID', 'REF100019', FALSE),
+(20, 20, 5, 8400.0, '2025-04-17 22:18:17', 'PAID', 'REF100020', FALSE),
+(21, 21, 1, 14600.0, '2025-04-26 22:18:17', 'PAID', 'REF100021', FALSE),
+(22, 22, 3, 16500.0, '2025-04-29 22:18:17', 'PAID', 'REF100022', FALSE),
+(23, 23, 5, 10600.0, '2025-04-26 22:18:17', 'PAID', 'REF100023', TRUE),
+(24, 24, 5, 44400.0, '2025-04-25 22:18:17', 'PAID', 'REF100024', TRUE),
+(25, 25, 2, 4800.0, '2025-04-20 22:18:17', 'PAID', 'REF100025', FALSE);
