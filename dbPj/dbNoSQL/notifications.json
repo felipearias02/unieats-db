@@ -1,0 +1,202 @@
+[
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Tu pedido ya esta listo para recoger.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "El pago no pudo ser procesado. Intentalo nuevamente.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Tienes un pago pendiente por tu ultimo pedido.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "El producto solicitado esta agotado, pero tenemos una alternativa.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Tu pedido ha sido cancelado por falta de pago.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "El buffet de almuerzo esta disponible solo hasta las 2 PM.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Se ha retrasado el despacho de pedidos por alta demanda.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Recuerda traer tu recipiente para el almuerzo tipo buffet.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Por mantenimiento, no se serviran bebidas calientes hoy.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 1,
+        "MESSAGE": "Evita filas: retira tu pedido por la ventanilla lateral.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Tu pedido ya esta listo para recoger.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "El pago no pudo ser procesado. Intentalo nuevamente.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Tienes un pago pendiente por tu ultimo pedido.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "El producto solicitado esta agotado, pero tenemos una alternativa.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Tu pedido ha sido cancelado por falta de pago.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Hoy tenemos nueva lasana con receta especial.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Recuerda que aqui no servimos desayunos ni ensaladas.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "Nuestros jugos Hatsu estan con descuento por hoy.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "La cocina cerrara 15 minutos antes por limpieza.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 2,
+        "MESSAGE": "El sistema de pedidos esta lento, paciencia por favor.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Tu pedido ya esta listo para recoger.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "El pago no pudo ser procesado. Intentalo nuevamente.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Tienes un pago pendiente por tu ultimo pedido.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "El producto solicitado esta agotado, pero tenemos una alternativa.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Tu pedido ha sido cancelado por falta de pago.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Promocion: donas 2x1 hasta agotar existencias.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Los combos de snack con bebida fria estan activos.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Recuerda que solo ofrecemos productos empacados.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Tu sandwich de atun estara listo en 3 minutos.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 3,
+        "MESSAGE": "Por hoy solo aceptamos pagos digitales.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Tu pedido ya esta listo para recoger.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "El pago no pudo ser procesado. Intentalo nuevamente.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Tienes un pago pendiente por tu ultimo pedido.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "El producto solicitado esta agotado, pero tenemos una alternativa.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Tu pedido ha sido cancelado por falta de pago.",
+        "TYPE": "estado"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Nos quedan pocas unidades del kit de frutas.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "No olvides hidratarte: tenemos H2O y te frio.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Cierre anticipado por evento institucional.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Se habilito una segunda fila para entrega rapida.",
+        "TYPE": "especial"
+    },
+    {
+        "CAFE_ID": 4,
+        "MESSAGE": "Si pediste dulces, estan en caja 2.",
+        "TYPE": "especial"
+    }
+]
