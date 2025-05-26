@@ -513,3 +513,99 @@ INSERT INTO PAYMENTS (PAYMENT_ID, ORDER_ID, PAYMENT_METHOD_ID, AMOUNT_PAID, PAYM
 
 
 -- Nuevo para primer commit en MacOS
+
+
+CREATE TABLE auditoria_orders (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    order_id_afectada INT,
+    accion VARCHAR(20),
+    datos_anteriores TEXT,
+    datos_nuevos TEXT,
+    usuario VARCHAR(100),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+DELIMITER /
+CREATE TRIGGER trg_antes_insertar_orders
+BEFORE INSERT ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_nuevos,
+        usuario
+    )
+    VALUES (
+        NULL,
+        'INSERT',
+        CONCAT(
+            'Fecha: ', NEW.ORDER_DATE, ', ',
+            'Estado: ', NEW.ORDER_STATUS, ', ',
+            'Usuario: ', NEW.USER_ID, ', ',
+            'Total: ', NEW.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
+
+
+DELIMITER /
+CREATE TRIGGER trg_despues_actualizar_orders
+AFTER UPDATE ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_anteriores,
+        datos_nuevos,
+        usuario
+    )
+    VALUES (
+        OLD.ORDER_ID,
+        'UPDATE',
+        CONCAT(
+            'Fecha: ', OLD.ORDER_DATE, ', ',
+            'Estado: ', OLD.ORDER_STATUS, ', ',
+            'Usuario: ', OLD.USER_ID, ', ',
+            'Total: ', OLD.TOTAL_AMOUNT
+        ),
+        CONCAT(
+            'Fecha: ', NEW.ORDER_DATE, ', ',
+            'Estado: ', NEW.ORDER_STATUS, ', ',
+            'Usuario: ', NEW.USER_ID, ', ',
+            'Total: ', NEW.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
+
+
+DELIMITER /
+CREATE TRIGGER trg_despues_eliminar_orders
+AFTER DELETE ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_anteriores,
+        usuario
+    )
+    VALUES (
+        OLD.ORDER_ID,
+        'DELETE',
+        CONCAT(
+            'Fecha: ', OLD.ORDER_DATE, ', ',
+            'Estado: ', OLD.ORDER_STATUS, ', ',
+            'Usuario: ', OLD.USER_ID, ', ',
+            'Total: ', OLD.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
