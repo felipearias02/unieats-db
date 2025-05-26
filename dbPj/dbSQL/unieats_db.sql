@@ -618,7 +618,6 @@ END
 
 --Procedimientos almacenados
 
--- 1. Procedimiento para poblar la tabla ROLES
 DELIMITER //
 CREATE PROCEDURE poblar_roles()
 BEGIN
@@ -630,7 +629,6 @@ BEGIN
 END;
 //
 
--- 2. Procedimiento para poblar la tabla WORKSTATION
 CREATE PROCEDURE poblar_workstation()
 BEGIN
     INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
@@ -649,7 +647,6 @@ BEGIN
 END;
 //
 
--- 3. Procedimiento para poblar la tabla CATEGORIES
 CREATE PROCEDURE poblar_categories()
 BEGIN
     INSERT INTO CATEGORIES (CATEGORY_NAME) VALUES
@@ -666,7 +663,6 @@ BEGIN
 END;
 //
 
--- 4. Procedimiento para poblar la tabla PAYMENT_METHODS
 CREATE PROCEDURE poblar_payment_methods()
 BEGIN
     INSERT INTO PAYMENT_METHODS (METHOD_NAME) VALUES
@@ -680,7 +676,6 @@ BEGIN
 END;
 //
 
--- 5. Procedimiento general para poblar todas las tablas paramétricas
 CREATE PROCEDURE poblar_parametros()
 BEGIN
     CALL poblar_roles();
@@ -690,7 +685,6 @@ BEGIN
 END;
 //
 
--- 6. Procedimiento para restar stock de productos
 CREATE PROCEDURE restar_stock_producto (
     IN p_producto_id INT,
     IN p_cantidad INT
@@ -698,14 +692,11 @@ CREATE PROCEDURE restar_stock_producto (
 BEGIN
     DECLARE stock_actual INT;
 
-    -- Obtener el stock actual
     SELECT STOCK INTO stock_actual
     FROM PRODUCTS
     WHERE PRODUCT_ID = p_producto_id;
 
-    -- Verificar si hay stock suficiente
     IF stock_actual >= p_cantidad THEN
-        -- Actualizar el stock
         UPDATE PRODUCTS
         SET STOCK = STOCK - p_cantidad
         WHERE PRODUCT_ID = p_producto_id;
@@ -716,7 +707,6 @@ BEGIN
 END;
 //
 
--- 7. Procedimiento para aumentar stock de productos
 CREATE PROCEDURE aumentar_stock_producto (
     IN p_producto_id INT,
     IN p_cantidad INT
