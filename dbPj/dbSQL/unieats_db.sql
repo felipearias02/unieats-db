@@ -151,12 +151,13 @@ CREATE TABLE PAYMENTS(
 );
 
 -- INSERCION TABLA ROLES
-
+/*
 INSERT INTO ROLES (ROLE_NAME) VALUES
 ('Estudiante'),
 ('Profesor'),
 ('Administrativo'),
 ('Colaborador');
+*/
 
 -- INSERCION TABLA CAFES
 
@@ -168,6 +169,7 @@ INSERT INTO CAFES (CAFE_ID, CAFE_NAME, CAFE_LOCATION, COMPANY_NAME) VALUES
 
 -- INSERCION TABLA WORKSTATION
 
+/*
 INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 ('Cajero'),
 ('Cocinero'),
@@ -181,6 +183,7 @@ INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 ('Asistente Cocina'),
 ('Supervisor General'),
 ('Atención al Cliente');
+*/
 
 -- INSERCION TABLA USERS
 
@@ -311,7 +314,7 @@ VALUES
 (412, 'Tomás', 'Eduardo', 'Aguilar', 'Osorio', '0412', 'tomás.aguilar0412@unieats.com', 'Calle 63 #20-20', 'tomásaguilar0412emp#', 4, 3);
 
 -- INSERCION TABLA PAYMENT_METHODS
-
+/*
 INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, METHOD_NAME) VALUES
 (1, 'Efectivo'),
 (2, 'Tarjeta de Crédito'),
@@ -320,9 +323,10 @@ INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, METHOD_NAME) VALUES
 (5, 'Nequi'),
 (6, 'Daviplata'),
 (7, 'Bancolombia App');
+*/
 
 -- INSERCION TABLA CATEGORIES
-
+/*
 INSERT INTO CATEGORIES (CATEGORY_ID, CATEGORY_NAME) VALUES
 (1, 'Bebidas calientes'),
 (2, 'Bebidas frías'),
@@ -334,6 +338,7 @@ INSERT INTO CATEGORIES (CATEGORY_ID, CATEGORY_NAME) VALUES
 (8, 'Combos'),
 (9, 'Productos saludables'),
 (10, 'Otros');
+*/
 
 -- INSERCION TABLA PRODUCTS
 
@@ -609,3 +614,117 @@ BEGIN
     );
 END
 /
+
+
+--Procedimientos almacenados
+
+-- 1. Procedimiento para poblar la tabla ROLES
+DELIMITER //
+CREATE PROCEDURE poblar_roles()
+BEGIN
+    INSERT INTO ROLES (ROLE_NAME) VALUES
+    ('Estudiante'),
+    ('Profesor'),
+    ('Administrativo'),
+    ('Colaborador');
+END;
+//
+
+-- 2. Procedimiento para poblar la tabla WORKSTATION
+CREATE PROCEDURE poblar_workstation()
+BEGIN
+    INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
+    ('Cajero'),
+    ('Cocinero'),
+    ('Limpieza Cocina'),
+    ('Entregador'),
+    ('Auxiliar de Caja'),
+    ('Repostería'),
+    ('Encargado Bebidas'),
+    ('Plancha'),
+    ('Freidora'),
+    ('Asistente Cocina'),
+    ('Supervisor General'),
+    ('Atención al Cliente');
+END;
+//
+
+-- 3. Procedimiento para poblar la tabla CATEGORIES
+CREATE PROCEDURE poblar_categories()
+BEGIN
+    INSERT INTO CATEGORIES (CATEGORY_NAME) VALUES
+    ('Bebidas calientes'),
+    ('Bebidas frías'),
+    ('Desayunos'),
+    ('Almuerzos'),
+    ('Comidas rápidas'),
+    ('Postres'),
+    ('Ensaladas'),
+    ('Combos'),
+    ('Productos saludables'),
+    ('Otros');
+END;
+//
+
+-- 4. Procedimiento para poblar la tabla PAYMENT_METHODS
+CREATE PROCEDURE poblar_payment_methods()
+BEGIN
+    INSERT INTO PAYMENT_METHODS (METHOD_NAME) VALUES
+    ('Efectivo'),
+    ('Tarjeta de Crédito'),
+    ('Tarjeta Débito'),
+    ('PSE'),
+    ('Nequi'),
+    ('Daviplata'),
+    ('Bancolombia App');
+END;
+//
+
+-- 5. Procedimiento general para poblar todas las tablas paramétricas
+CREATE PROCEDURE poblar_parametros()
+BEGIN
+    CALL poblar_roles();
+    CALL poblar_workstation();
+    CALL poblar_categories();
+    CALL poblar_payment_methods();
+END;
+//
+
+-- 6. Procedimiento para restar stock de productos
+CREATE PROCEDURE restar_stock_producto (
+    IN p_producto_id INT,
+    IN p_cantidad INT
+)
+BEGIN
+    DECLARE stock_actual INT;
+
+    -- Obtener el stock actual
+    SELECT STOCK INTO stock_actual
+    FROM PRODUCTS
+    WHERE PRODUCT_ID = p_producto_id;
+
+    -- Verificar si hay stock suficiente
+    IF stock_actual >= p_cantidad THEN
+        -- Actualizar el stock
+        UPDATE PRODUCTS
+        SET STOCK = STOCK - p_cantidad
+        WHERE PRODUCT_ID = p_producto_id;
+    ELSE
+        SIGNAL SQLSTATE '45000' --Error personalizado de mysql ja
+        SET MESSAGE_TEXT = 'Stock insuficiente para este producto.';
+    END IF;
+END;
+//
+
+-- 7. Procedimiento para aumentar stock de productos
+CREATE PROCEDURE aumentar_stock_producto (
+    IN p_producto_id INT,
+    IN p_cantidad INT
+)
+BEGIN
+    UPDATE PRODUCTS
+    SET STOCK = STOCK + p_cantidad
+    WHERE PRODUCT_ID = p_producto_id;
+END;
+//
+DELIMITER ;
