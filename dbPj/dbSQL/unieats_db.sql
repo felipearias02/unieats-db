@@ -186,7 +186,7 @@ INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 */
 
 
---Procedimientos almacenados
+-- Procedimientos almacenados
 
 DELIMITER //
 CREATE PROCEDURE poblar_roles()
@@ -273,7 +273,7 @@ BEGIN
         SET STOCK = STOCK - p_cantidad
         WHERE PRODUCT_ID = p_producto_id;
     ELSE
-        SIGNAL SQLSTATE '45000' --Error personalizado de mysql ja
+        SIGNAL SQLSTATE '45000' -- Error personalizado de mysql ja
         SET MESSAGE_TEXT = 'Stock insuficiente para este producto.';
     END IF;
 END;
@@ -292,7 +292,7 @@ END;
 DELIMITER ;
 
 
---Triggers
+-- Triggers
 
 CREATE TABLE auditoria_orders (
     id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
