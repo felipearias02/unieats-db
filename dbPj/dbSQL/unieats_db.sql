@@ -255,6 +255,8 @@ BEGIN
 END;
 //
 
+CALL poblar_parametros();
+
 CREATE PROCEDURE restar_stock_producto (
     IN p_producto_id INT,
     IN p_cantidad INT
@@ -718,9 +720,4 @@ INSERT INTO PAYMENTS (PAYMENT_ID, ORDER_ID, PAYMENT_METHOD_ID, AMOUNT_PAID, PAYM
 (23, 23, 5, 10600.0, '2025-04-26 22:18:17', 'PAID', 'REF100023', TRUE),
 (24, 24, 5, 44400.0, '2025-04-25 22:18:17', 'PAID', 'REF100024', TRUE),
 (25, 25, 2, 4800.0, '2025-04-20 22:18:17', 'PAID', 'REF100025', FALSE);
-
-
--- Nuevo para primer commit en MacOS
-
-
 
