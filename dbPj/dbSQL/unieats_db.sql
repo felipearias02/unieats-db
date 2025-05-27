@@ -255,8 +255,11 @@ BEGIN
 END;
 //
 
+DELIMITER ;
+
 CALL poblar_parametros();
 
+DELIMITER //
 CREATE PROCEDURE restar_stock_producto (
     IN p_producto_id INT,
     IN p_cantidad INT
@@ -279,6 +282,8 @@ BEGIN
 END;
 //
 
+DELIMITER //
+
 CREATE PROCEDURE aumentar_stock_producto (
     IN p_producto_id INT,
     IN p_cantidad INT
@@ -289,6 +294,7 @@ BEGIN
     WHERE PRODUCT_ID = p_producto_id;
 END;
 //
+
 DELIMITER ;
 
 
@@ -305,7 +311,7 @@ CREATE TABLE auditoria_orders (
 );
 
 
-DELIMITER /
+DELIMITER //
 CREATE TRIGGER trg_antes_insertar_orders
 BEFORE INSERT ON ORDERS
 FOR EACH ROW
@@ -328,10 +334,8 @@ BEGIN
         USER()
     );
 END
-/
+//
 
-
-DELIMITER /
 CREATE TRIGGER trg_despues_actualizar_orders
 AFTER UPDATE ON ORDERS
 FOR EACH ROW
@@ -361,10 +365,9 @@ BEGIN
         USER()
     );
 END
-/
+//
 
 
-DELIMITER /
 CREATE TRIGGER trg_despues_eliminar_orders
 AFTER DELETE ON ORDERS
 FOR EACH ROW
@@ -387,7 +390,8 @@ BEGIN
         USER()
     );
 END
-/
+//
+DELIMITER ;
 
 
 -- INSERCION TABLA USERS
