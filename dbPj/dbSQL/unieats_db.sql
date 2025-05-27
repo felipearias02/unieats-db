@@ -297,6 +297,42 @@ END;
 
 DELIMITER ;
 
+DELIMITER //
+
+CREATE PROCEDURE crear_orden_completa (
+    IN p_user_id INT,
+    IN p_cafe_id INT,
+    IN p_employee_id INT,
+    IN p_product_id INT,
+    IN p_quantity INT,
+    IN p_unit_price DECIMAL(10,2)
+)
+BEGIN
+    DECLARE v_total DECIMAL(10,2);
+    DECLARE v_order_id INT;
+
+    -- Calcular total
+    SET v_total = p_quantity * p_unit_price;
+
+    -- Insertar en ORDERS
+    INSERT INTO ORDERS (USER_ID, CAFE_ID, TAKEN_BY_EMPLOYEE_ID, ORDER_STATUS, TOTAL_AMOUNT)
+    VALUES (p_user_id, p_cafe_id, p_employee_id, 'PENDING', v_total);
+
+    -- Obtener el ID de la orden recién creada
+    SET v_order_id = LAST_INSERT_ID();
+
+    -- Insertar detalle
+    INSERT INTO ORDER_DETAILS (ORDER_ID, PRODUCT_ID, QUANTITY, UNIT_PRICE)
+    VALUES (v_order_id, p_product_id, p_quantity, p_unit_price);
+
+    -- Restar stock
+    CALL restar_stock_producto(p_product_id, p_quantity);
+END;
+//
+
+DELIMITER ;
+
+CALL crear_orden_completa();
 
 -- Triggers
 
