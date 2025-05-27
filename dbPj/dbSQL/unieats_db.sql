@@ -348,7 +348,7 @@ END;
 
 DELIMITER ;
 
-CALL crear_orden_con_pago();
+
 
 -- Triggers
 
