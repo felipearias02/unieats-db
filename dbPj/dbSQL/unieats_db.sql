@@ -185,6 +185,209 @@ INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
 ('Atención al Cliente');
 */
 
+
+--Procedimientos almacenados
+
+DELIMITER //
+CREATE PROCEDURE poblar_roles()
+BEGIN
+    INSERT INTO ROLES (ROLE_NAME) VALUES
+    ('Estudiante'),
+    ('Profesor'),
+    ('Administrativo'),
+    ('Colaborador');
+END;
+//
+
+CREATE PROCEDURE poblar_workstation()
+BEGIN
+    INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
+    ('Cajero'),
+    ('Cocinero'),
+    ('Limpieza Cocina'),
+    ('Entregador'),
+    ('Auxiliar de Caja'),
+    ('Repostería'),
+    ('Encargado Bebidas'),
+    ('Plancha'),
+    ('Freidora'),
+    ('Asistente Cocina'),
+    ('Supervisor General'),
+    ('Atención al Cliente');
+END;
+//
+
+CREATE PROCEDURE poblar_categories()
+BEGIN
+    INSERT INTO CATEGORIES (CATEGORY_NAME) VALUES
+    ('Bebidas calientes'),
+    ('Bebidas frías'),
+    ('Desayunos'),
+    ('Almuerzos'),
+    ('Comidas rápidas'),
+    ('Postres'),
+    ('Ensaladas'),
+    ('Combos'),
+    ('Productos saludables'),
+    ('Otros');
+END;
+//
+
+CREATE PROCEDURE poblar_payment_methods()
+BEGIN
+    INSERT INTO PAYMENT_METHODS (METHOD_NAME) VALUES
+    ('Efectivo'),
+    ('Tarjeta de Crédito'),
+    ('Tarjeta Débito'),
+    ('PSE'),
+    ('Nequi'),
+    ('Daviplata'),
+    ('Bancolombia App');
+END;
+//
+
+CREATE PROCEDURE poblar_parametros()
+BEGIN
+    CALL poblar_roles();
+    CALL poblar_workstation();
+    CALL poblar_categories();
+    CALL poblar_payment_methods();
+END;
+//
+
+CREATE PROCEDURE restar_stock_producto (
+    IN p_producto_id INT,
+    IN p_cantidad INT
+)
+BEGIN
+    DECLARE stock_actual INT;
+
+    SELECT STOCK INTO stock_actual
+    FROM PRODUCTS
+    WHERE PRODUCT_ID = p_producto_id;
+
+    IF stock_actual >= p_cantidad THEN
+        UPDATE PRODUCTS
+        SET STOCK = STOCK - p_cantidad
+        WHERE PRODUCT_ID = p_producto_id;
+    ELSE
+        SIGNAL SQLSTATE '45000' --Error personalizado de mysql ja
+        SET MESSAGE_TEXT = 'Stock insuficiente para este producto.';
+    END IF;
+END;
+//
+
+CREATE PROCEDURE aumentar_stock_producto (
+    IN p_producto_id INT,
+    IN p_cantidad INT
+)
+BEGIN
+    UPDATE PRODUCTS
+    SET STOCK = STOCK + p_cantidad
+    WHERE PRODUCT_ID = p_producto_id;
+END;
+//
+DELIMITER ;
+
+
+--Triggers
+
+CREATE TABLE auditoria_orders (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    order_id_afectada INT,
+    accion VARCHAR(20),
+    datos_anteriores TEXT,
+    datos_nuevos TEXT,
+    usuario VARCHAR(100),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+DELIMITER /
+CREATE TRIGGER trg_antes_insertar_orders
+BEFORE INSERT ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_nuevos,
+        usuario
+    )
+    VALUES (
+        NULL,
+        'INSERT',
+        CONCAT(
+            'Fecha: ', NEW.ORDER_DATE, ', ',
+            'Estado: ', NEW.ORDER_STATUS, ', ',
+            'Usuario: ', NEW.USER_ID, ', ',
+            'Total: ', NEW.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
+
+
+DELIMITER /
+CREATE TRIGGER trg_despues_actualizar_orders
+AFTER UPDATE ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_anteriores,
+        datos_nuevos,
+        usuario
+    )
+    VALUES (
+        OLD.ORDER_ID,
+        'UPDATE',
+        CONCAT(
+            'Fecha: ', OLD.ORDER_DATE, ', ',
+            'Estado: ', OLD.ORDER_STATUS, ', ',
+            'Usuario: ', OLD.USER_ID, ', ',
+            'Total: ', OLD.TOTAL_AMOUNT
+        ),
+        CONCAT(
+            'Fecha: ', NEW.ORDER_DATE, ', ',
+            'Estado: ', NEW.ORDER_STATUS, ', ',
+            'Usuario: ', NEW.USER_ID, ', ',
+            'Total: ', NEW.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
+
+
+DELIMITER /
+CREATE TRIGGER trg_despues_eliminar_orders
+AFTER DELETE ON ORDERS
+FOR EACH ROW
+BEGIN
+    INSERT INTO auditoria_orders (
+        order_id_afectada,
+        accion,
+        datos_anteriores,
+        usuario
+    )
+    VALUES (
+        OLD.ORDER_ID,
+        'DELETE',
+        CONCAT(
+            'Fecha: ', OLD.ORDER_DATE, ', ',
+            'Estado: ', OLD.ORDER_STATUS, ', ',
+            'Usuario: ', OLD.USER_ID, ', ',
+            'Total: ', OLD.TOTAL_AMOUNT
+        ),
+        USER()
+    );
+END
+/
+
+
 -- INSERCION TABLA USERS
 
 INSERT INTO USERS (USER_ID, FIRST_NAME, SECOND_NAME, LAST_NAME, SECOND_LAST_NAME, CC_NUMBER, INSTITUTIONAL_EMAIL, ADDRESS, PASSWORD, ROLE_ID)
@@ -520,201 +723,4 @@ INSERT INTO PAYMENTS (PAYMENT_ID, ORDER_ID, PAYMENT_METHOD_ID, AMOUNT_PAID, PAYM
 -- Nuevo para primer commit en MacOS
 
 
-CREATE TABLE auditoria_orders (
-    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
-    order_id_afectada INT,
-    accion VARCHAR(20),
-    datos_anteriores TEXT,
-    datos_nuevos TEXT,
-    usuario VARCHAR(100),
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
-
-DELIMITER /
-CREATE TRIGGER trg_antes_insertar_orders
-BEFORE INSERT ON ORDERS
-FOR EACH ROW
-BEGIN
-    INSERT INTO auditoria_orders (
-        order_id_afectada,
-        accion,
-        datos_nuevos,
-        usuario
-    )
-    VALUES (
-        NULL,
-        'INSERT',
-        CONCAT(
-            'Fecha: ', NEW.ORDER_DATE, ', ',
-            'Estado: ', NEW.ORDER_STATUS, ', ',
-            'Usuario: ', NEW.USER_ID, ', ',
-            'Total: ', NEW.TOTAL_AMOUNT
-        ),
-        USER()
-    );
-END
-/
-
-
-DELIMITER /
-CREATE TRIGGER trg_despues_actualizar_orders
-AFTER UPDATE ON ORDERS
-FOR EACH ROW
-BEGIN
-    INSERT INTO auditoria_orders (
-        order_id_afectada,
-        accion,
-        datos_anteriores,
-        datos_nuevos,
-        usuario
-    )
-    VALUES (
-        OLD.ORDER_ID,
-        'UPDATE',
-        CONCAT(
-            'Fecha: ', OLD.ORDER_DATE, ', ',
-            'Estado: ', OLD.ORDER_STATUS, ', ',
-            'Usuario: ', OLD.USER_ID, ', ',
-            'Total: ', OLD.TOTAL_AMOUNT
-        ),
-        CONCAT(
-            'Fecha: ', NEW.ORDER_DATE, ', ',
-            'Estado: ', NEW.ORDER_STATUS, ', ',
-            'Usuario: ', NEW.USER_ID, ', ',
-            'Total: ', NEW.TOTAL_AMOUNT
-        ),
-        USER()
-    );
-END
-/
-
-
-DELIMITER /
-CREATE TRIGGER trg_despues_eliminar_orders
-AFTER DELETE ON ORDERS
-FOR EACH ROW
-BEGIN
-    INSERT INTO auditoria_orders (
-        order_id_afectada,
-        accion,
-        datos_anteriores,
-        usuario
-    )
-    VALUES (
-        OLD.ORDER_ID,
-        'DELETE',
-        CONCAT(
-            'Fecha: ', OLD.ORDER_DATE, ', ',
-            'Estado: ', OLD.ORDER_STATUS, ', ',
-            'Usuario: ', OLD.USER_ID, ', ',
-            'Total: ', OLD.TOTAL_AMOUNT
-        ),
-        USER()
-    );
-END
-/
-
-
---Procedimientos almacenados
-
-DELIMITER //
-CREATE PROCEDURE poblar_roles()
-BEGIN
-    INSERT INTO ROLES (ROLE_NAME) VALUES
-    ('Estudiante'),
-    ('Profesor'),
-    ('Administrativo'),
-    ('Colaborador');
-END;
-//
-
-CREATE PROCEDURE poblar_workstation()
-BEGIN
-    INSERT INTO WORKSTATION (WORKSTATION_NAME) VALUES
-    ('Cajero'),
-    ('Cocinero'),
-    ('Limpieza Cocina'),
-    ('Entregador'),
-    ('Auxiliar de Caja'),
-    ('Repostería'),
-    ('Encargado Bebidas'),
-    ('Plancha'),
-    ('Freidora'),
-    ('Asistente Cocina'),
-    ('Supervisor General'),
-    ('Atención al Cliente');
-END;
-//
-
-CREATE PROCEDURE poblar_categories()
-BEGIN
-    INSERT INTO CATEGORIES (CATEGORY_NAME) VALUES
-    ('Bebidas calientes'),
-    ('Bebidas frías'),
-    ('Desayunos'),
-    ('Almuerzos'),
-    ('Comidas rápidas'),
-    ('Postres'),
-    ('Ensaladas'),
-    ('Combos'),
-    ('Productos saludables'),
-    ('Otros');
-END;
-//
-
-CREATE PROCEDURE poblar_payment_methods()
-BEGIN
-    INSERT INTO PAYMENT_METHODS (METHOD_NAME) VALUES
-    ('Efectivo'),
-    ('Tarjeta de Crédito'),
-    ('Tarjeta Débito'),
-    ('PSE'),
-    ('Nequi'),
-    ('Daviplata'),
-    ('Bancolombia App');
-END;
-//
-
-CREATE PROCEDURE poblar_parametros()
-BEGIN
-    CALL poblar_roles();
-    CALL poblar_workstation();
-    CALL poblar_categories();
-    CALL poblar_payment_methods();
-END;
-//
-
-CREATE PROCEDURE restar_stock_producto (
-    IN p_producto_id INT,
-    IN p_cantidad INT
-)
-BEGIN
-    DECLARE stock_actual INT;
-
-    SELECT STOCK INTO stock_actual
-    FROM PRODUCTS
-    WHERE PRODUCT_ID = p_producto_id;
-
-    IF stock_actual >= p_cantidad THEN
-        UPDATE PRODUCTS
-        SET STOCK = STOCK - p_cantidad
-        WHERE PRODUCT_ID = p_producto_id;
-    ELSE
-        SIGNAL SQLSTATE '45000' --Error personalizado de mysql ja
-        SET MESSAGE_TEXT = 'Stock insuficiente para este producto.';
-    END IF;
-END;
-//
-
-CREATE PROCEDURE aumentar_stock_producto (
-    IN p_producto_id INT,
-    IN p_cantidad INT
-)
-BEGIN
-    UPDATE PRODUCTS
-    SET STOCK = STOCK + p_cantidad
-    WHERE PRODUCT_ID = p_producto_id;
-END;
-//
-DELIMITER ;
