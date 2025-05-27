@@ -299,40 +299,56 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE PROCEDURE crear_orden_completa (
+CREATE PROCEDURE crear_orden_con_pago(
     IN p_user_id INT,
     IN p_cafe_id INT,
     IN p_employee_id INT,
     IN p_product_id INT,
     IN p_quantity INT,
-    IN p_unit_price DECIMAL(10,2)
+    IN p_unit_price DECIMAL(10,2),
+    IN p_payment_method_id INT,
+    IN p_reference_code VARCHAR(100)
 )
 BEGIN
     DECLARE v_total DECIMAL(10,2);
     DECLARE v_order_id INT;
 
-    -- Calcular total
     SET v_total = p_quantity * p_unit_price;
 
-    -- Insertar en ORDERS
-    INSERT INTO ORDERS (USER_ID, CAFE_ID, TAKEN_BY_EMPLOYEE_ID, ORDER_STATUS, TOTAL_AMOUNT)
-    VALUES (p_user_id, p_cafe_id, p_employee_id, 'PENDING', v_total);
+    INSERT INTO ORDERS (
+        USER_ID, CAFE_ID, TAKEN_BY_EMPLOYEE_ID,
+        ORDER_STATUS, TOTAL_AMOUNT
+    )
+    VALUES (
+        p_user_id, p_cafe_id, p_employee_id,
+        'PENDING', v_total
+    );
 
-    -- Obtener el ID de la orden recién creada
     SET v_order_id = LAST_INSERT_ID();
 
-    -- Insertar detalle
-    INSERT INTO ORDER_DETAILS (ORDER_ID, PRODUCT_ID, QUANTITY, UNIT_PRICE)
-    VALUES (v_order_id, p_product_id, p_quantity, p_unit_price);
+    INSERT INTO ORDER_DETAILS (
+        ORDER_ID, PRODUCT_ID, QUANTITY, UNIT_PRICE
+    )
+    VALUES (
+        v_order_id, p_product_id, p_quantity, p_unit_price
+    );
 
-    -- Restar stock
     CALL restar_stock_producto(p_product_id, p_quantity);
+
+    INSERT INTO PAYMENTS (
+        ORDER_ID, PAYMENT_METHOD_ID, AMOUNT_PAID,
+        PAYMENT_STATUS, REFERENCE_CODE
+    )
+    VALUES (
+        v_order_id, p_payment_method_id, v_total,
+        'PAID', p_reference_code
+    );
 END;
 //
 
 DELIMITER ;
 
-CALL crear_orden_completa();
+CALL crear_orden_con_pago();
 
 -- Triggers
 
