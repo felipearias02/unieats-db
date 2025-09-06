@@ -15,6 +15,9 @@ ROLES ASIGNADOS:
     4. Colaborador
 */
 
+
+-- Los roles son asignados en tablas parametricas, no enums para evitar casos infortunados
+
 CREATE TABLE USERS(
     USER_ID INT PRIMARY KEY AUTO_INCREMENT,
     FIRST_NAME VARCHAR(50) NOT NULL,
