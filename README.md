@@ -29,3 +29,6 @@ El modelo de datos combina lo mejor de ambos mundos:
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/felipearias02/unieats-db.git
+
+## Proyecto!
+Este repositorio forma parte del ecosistema técnico de UniEats, y está pensado para ser utilizado por desarrolladores que trabajen en la implementación de funcionalidades backend, sincronización de datos entre servicios o validación de integridad de información. Su objetivo es servir como una referencia centralizada y confiable para el diseño de datos de la plataforma.
