@@ -4,7 +4,7 @@ Este repositorio contiene la configuración y estructura de bases de datos relac
 
 ## Propósito
 
-El objetivo de este repositorio es centralizar y documentar los esquemas de datos utilizados por UniEats, tanto para sistemas basados en SQL (relacionales) como para bases de datos NoSQL documentales. Esta separación permite aprovechar lo mejor de cada enfoque según las necesidades de almacenamiento, consulta y escalabilidad.
+El objetivo de este repositorio es centralizar y documentar los esquemas de datos utilizados por UniEats, tanto para sistemas basados en SQL (relacionales) como para bases de datos NoSQL documentales. Esta separación permite aprovechar lo mejor de cada enfoque según las necesidades de almacenamiento, consulta y escalabilidad del sistema.
 
 ## Contenido del repositorio
 
